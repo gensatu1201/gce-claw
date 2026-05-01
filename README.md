@@ -54,20 +54,22 @@ TOKEN="your-token-here"
 # --------------------------------------
 
 # 1. Force initial DuckDNS Sync
-IP=$(curl -s [http://checkip.amazonaws.com](http://checkip.amazonaws.com))
-curl -s "[https://www.duckdns.org/update?domains=$DOMAIN&token=$TOKEN&ip=$IP](https://www.duckdns.org/update?domains=$DOMAIN&token=$TOKEN&ip=$IP)"
+IP=$(curl -s http://checkip.amazonaws.com)
+curl -s "https://www.duckdns.org/update?domains=$DOMAIN&token=$TOKEN&ip=$IP"
 
 # 2. Run the OpenClaw 1-Line Installer
-curl -fsSL [https://openclaw.ai/install.sh](https://openclaw.ai/install.sh) | bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 
-# 3. Setup the HTTPS config (Caddyfile) pointing to OpenClaw port 18789
-cat <<EOF> Caddyfile
+# 3. Setup the HTTPS config
+cat <<EOF > Caddyfile
 $DOMAIN.duckdns.org {
     reverse_proxy localhost:18789
 }
 EOF
 
 # 4. Launch the HTTPS Provider (Caddy)
+# We wait 5 seconds to ensure the installer has finished binding the port
+sleep 5
 sudo docker run -d --name caddy --restart always \
   -p 80:80 -p 443:443 \
   --network host \
@@ -75,8 +77,8 @@ sudo docker run -d --name caddy --restart always \
   -v caddy_data:/data \
   caddy
 
-# 5. Enable Auto-Sync (Updates IP every 5 mins automatically)
-(crontab -l 2>/dev/null; echo "*/5 * * * * curl -s '[https://www.duckdns.org/update?domains=$DOMAIN&token=$TOKEN&ip=](https://www.duckdns.org/update?domains=$DOMAIN&token=$TOKEN&ip=)' >/dev/null 2>&1") | crontab -
+# 5. Enable Auto-Sync
+(crontab -l 2>/dev/null; echo "*/5 * * * * curl -s 'https://www.duckdns.org/update?domains=$DOMAIN&token=$TOKEN&ip=' >/dev/null 2>&1") | crontab -
 
 echo "--------------------------------------------------------"
 echo "✅ SETUP COMPLETE!"
