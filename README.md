@@ -25,7 +25,7 @@ We will use **Google Cloud Shell** to provision the server.
 gcloud services enable compute.googleapis.com
 
 # 2. Clone the deployment repository
-git clone [https://github.com/gensatu1201/gce-claw.git](https://github.com/gensatu1201/gce-claw.git)
+git clone https://github.com/gensatu1201/gce-claw.git
 cd gce-claw
 
 # 3. Initialize and apply Terraform
