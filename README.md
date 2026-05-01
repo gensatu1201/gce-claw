@@ -38,6 +38,10 @@ terraform apply -var="project_id=$(gcloud config get-value project)" -auto-appro
 gcloud compute ssh claw-server --zone=us-central1-a
 ```
 
+> **⚠️ NOTE FOR LEARNERS:** 
+> If Google asks to "generate SSH keys," type **Y** and hit **Enter**. 
+> When it asks for a **passphrase**, just hit **Enter** twice (leave it blank). This is a one-time security setup.
+
 ---
 
 ## Phase 3: The "One-Touch" Setup
